@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/martinp/ifconfigd/api"
+	"github.com/twouters/ifconfigd/api"
 )
 
 func main() {

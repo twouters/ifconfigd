@@ -21,6 +21,7 @@ import (
 const (
 	IP_HEADER        = "x-ifconfig-ip"
 	COUNTRY_HEADER   = "x-ifconfig-country"
+	HOSTNAME_HEADER  = "x-ifconfig-hostname"
 	TEXT_PLAIN       = "text/plain; charset=utf-8"
 	APPLICATION_JSON = "application/json"
 )
@@ -197,6 +198,12 @@ func (a *API) requestFilter(next http.Handler) http.Handler {
 				r.Header.Set(COUNTRY_HEADER, country)
 			}
 		}
+	        hostname, err := net.LookupAddr(ip.String())
+		if err != nil {
+	            r.Header.Set(HOSTNAME_HEADER, err.Error())
+	        } else {
+	            r.Header.Set(HOSTNAME_HEADER, strings.Join(hostname, ", "))
+	        }
 		if a.CORS {
 			w.Header().Set("Access-Control-Allow-Methods", "GET")
 			w.Header().Set("Access-Control-Allow-Origin", "*")

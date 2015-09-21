@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"reflect"
 	"testing"
+	"strings"
 )
 
 func httpGet(url string, json bool, userAgent string) (string, int, error) {
@@ -39,8 +40,16 @@ func TestGetIP(t *testing.T) {
 		return fmt.Sprintf("{\n  \"%s\": \"%s\"\n}", k, v)
 	}
 	s := httptest.NewServer(New().Handlers())
+	host,err := net.LookupAddr("127.0.0.1")
+	var hostname string
+	if err != nil {
+	    hostname = ""
+	} else {
+	    hostname = strings.Join(host,", ")
+	}
 	jsonAll := "{\n  \"Accept-Encoding\": [\n    \"gzip\"\n  ]," +
 		"\n  \"X-Ifconfig-Country\": [\n    \"\"\n  ]," +
+		"\n  \"X-Ifconfig-Hostname\": [\n    \"" + hostname + "\"\n  ]," +
 		"\n  \"X-Ifconfig-Ip\": [\n    \"127.0.0.1\"\n  ]\n}"
 
 	var tests = []struct {
